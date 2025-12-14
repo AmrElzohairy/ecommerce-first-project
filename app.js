@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
-const globalErrorHandler = require('./middlewares/errorHandler');
+const globalErrorHandler = require('./middlewares/globalErrorHandler');
 const connectDB = require('./connections/db.connection');
 const app = express();
 const categoriesRoute = require('./routes/categories.route');
@@ -15,10 +15,10 @@ dotenv.config();
 connectDB();
 
 const PORT = process.env.PORT || 3000;
-const CURRENT_ENV = process.env.CURRENT_ENV || 'development';
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Middleware
-if (CURRENT_ENV === 'development') {
+if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 app.use(express.json());
@@ -36,6 +36,6 @@ app.use(globalErrorHandler);
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running in ${CURRENT_ENV} mode on port ${PORT} and http://localhost:${PORT}`);
+    console.log(`Server is running in ${NODE_ENV} mode on port ${PORT} and http://localhost:${PORT}`);
 });
 
