@@ -19,14 +19,11 @@ let getAllCategories = asyncHandler(async (req, res) => {
   });
 });
 
-let getCategoryById = asyncHandler(async (req, res) => {
+let getCategoryById = asyncHandler(async (req, res, next) => {
   let categoryId = req.params.categoryId;
   let category = await categoryModel.findById(categoryId, { __v: 0 });
   if (!category) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Category not found'
-    });
+    return next(new ApiError(404, 'Category not found'));
   }
   res.status(200).json({
     status: 'success',
@@ -51,7 +48,7 @@ let createCategory = asyncHandler(async (req, res) => {
 })
 
 let updateCategory = asyncHandler(
-  async (req, res) => {
+  async (req, res , next) => {
     let categoryId = req.params.categoryId;
     let name = req.body.name;
     let category = await categoryModel.findByIdAndUpdate({ _id: categoryId }, {
@@ -59,10 +56,7 @@ let updateCategory = asyncHandler(
       slug: slugify(name)
     }, { new: true });
     if (!category) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Category not found'
-      });
+     return next(new ApiError(404, 'Category not found'));
     }
     res.status(200).json({
       status: 'success',
@@ -74,11 +68,11 @@ let updateCategory = asyncHandler(
 );
 
 let deleteCategory = asyncHandler(
-  async (req, res) => {
+  async (req, res , next) => {
     let categoryId = req.params.categoryId;
     let category = await categoryModel.findByIdAndDelete({ _id: categoryId });
     if (!category) {
-      throw new ApiError(404, 'Category not found');
+     return next(new ApiError(404, 'Category not found'));
     }
     res.status(200).json({
       status: 'success',
