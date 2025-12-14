@@ -20,7 +20,7 @@ let getAllCategories = asyncHandler(async (req, res) => {
 
 let getCategoryById = asyncHandler(async (req, res) => {
   let categoryId = req.params.categoryId;
-  let category = await categoryModel.findById(categoryId);
+  let category = await categoryModel.findById(categoryId , {__v: 0});
   res.status(200).json({
     status: 'success',
     data: {
