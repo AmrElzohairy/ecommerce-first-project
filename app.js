@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const globalErrorHandler = require('./middlewares/errorHandler');
 const connectDB = require('./connections/db.connection');
 const app = express();
 const categoriesRoute = require('./routes/categories.route');
@@ -31,13 +32,7 @@ app.use((req, res, next) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-    res.status(err.statusCode || 500).json({
-        statusCode: err.statusCode,
-        status: err.status,
-        message: err.message,
-    });
-});
+app.use(globalErrorHandler);
 
 // Start the server
 app.listen(PORT, () => {
