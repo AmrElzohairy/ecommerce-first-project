@@ -21,6 +21,12 @@ let getAllCategories = asyncHandler(async (req, res) => {
 let getCategoryById = asyncHandler(async (req, res) => {
   let categoryId = req.params.categoryId;
   let category = await categoryModel.findById(categoryId , {__v: 0});
+  if(!category) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Category not found'
+    });
+  }
   res.status(200).json({
     status: 'success',
     data: {
