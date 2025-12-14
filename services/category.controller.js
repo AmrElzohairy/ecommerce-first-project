@@ -4,12 +4,27 @@ const asyncHandler = require('express-async-handler')
 
 
 let getAllCategories = asyncHandler(async (req, res) => {
-  let categories = await categoryModel.find({});
+  let page = parseInt(req.query.page) || 1;
+  let limit = parseInt(req.query.limit) || 5;
+  const skip = (page - 1) * limit;
+  let allCategoriesLength = await categoryModel.countDocuments();
+  let categories = await categoryModel.find({}).limit(limit).skip(skip);
   res.status(200).json({
     status: 'success',
-    results: categories.length,
+    results: allCategoriesLength,
     data: {
       "categories": categories
+    },
+  });
+});
+
+let getCategoryById = asyncHandler(async (req, res) => {
+  let categoryId = req.params.categoryId;
+  let category = await categoryModel.findById(categoryId);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      "category": category
     },
   });
 });
@@ -31,4 +46,5 @@ let createCategory = asyncHandler(async (req, res) => {
 module.exports = {
   getAllCategories,
   createCategory,
+  getCategoryById
 };
