@@ -35,7 +35,16 @@ app.use((req, res, next) => {
 app.use(globalErrorHandler);
 
 // Start the server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server is running in ${NODE_ENV} mode on port ${PORT} and http://localhost:${PORT}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+    console.error("❌ Unhandled Rejection Error...", `Error name: ${err.name}...` , `Error message: ${err.message}`);
+    server.close(() => {
+        console.error("❌ Unhandled Rejection Error... Server is shutting down...");
+        process.exit(1);
+    });
 });
 
