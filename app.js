@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const connectDB = require('./connections/db.connection');
 const app = express();
+const categoriesRoute = require('./routes/categories.route');
 
 
 // Load environment variables from .env file
@@ -20,10 +21,8 @@ if (CURRENT_ENV === 'development') {
 }
 app.use(express.json());
 
-// Sample route
-app.get('/', (req, res) => {
-    res.send('Welcome to the E-commerce API');
-});
+// Routes
+app.use('/api/v1/categories', categoriesRoute);
 
 // Start the server
 app.listen(PORT, () => {
