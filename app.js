@@ -24,6 +24,22 @@ app.use(express.json());
 // Routes
 app.use('/api/v1/categories', categoriesRoute);
 
+// 404 Handler - Must be after all routes
+app.use((req, res, next) => {
+  const error = new Error(`Route not found - ${req.originalUrl}`);
+  error.statusCode = 404;
+  next(error);
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({
+        status: 'error',
+        message: err.message,
+    });
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running in ${CURRENT_ENV} mode on port ${PORT} and http://localhost:${PORT}`);
