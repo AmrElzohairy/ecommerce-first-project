@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./connections/db.connection');
 const app = express();
 const categoriesRoute = require('./routes/categories.route');
+const ApiError = require('./utils/apiError');
 
 
 // Load environment variables from .env file
@@ -26,16 +27,14 @@ app.use('/api/v1/categories', categoriesRoute);
 
 // 404 Handler - Must be after all routes
 app.use((req, res, next) => {
-  const error = new Error(`Route not found - ${req.originalUrl}`);
-  error.statusCode = 404;
-  next(error);
+    next(new ApiError(404, 'Route not found'));
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode).json({
-        status: 'error',
+    res.status(err.statusCode || 500).json({
+        statusCode: err.statusCode,
+        status: err.status,
         message: err.message,
     });
 });

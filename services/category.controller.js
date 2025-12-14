@@ -1,6 +1,7 @@
 const categoryModel = require('../models/categorySchema');
 const slugify = require('slugify')
 const asyncHandler = require('express-async-handler')
+const ApiError = require('../utils/apiError');
 
 
 let getAllCategories = asyncHandler(async (req, res) => {
@@ -77,10 +78,7 @@ let deleteCategory = asyncHandler(
     let categoryId = req.params.categoryId;
     let category = await categoryModel.findByIdAndDelete({ _id: categoryId });
     if (!category) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Category not found'
-      });
+      throw new ApiError(404, 'Category not found');
     }
     res.status(200).json({
       status: 'success',
