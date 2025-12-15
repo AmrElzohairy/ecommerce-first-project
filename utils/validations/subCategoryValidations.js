@@ -3,19 +3,26 @@ const validationMiddleware = require('../../middlewares/validatorMiddleware');
 
 const getSubCategoryByIdValidator = [
     check('subCategoryId')
-    .isMongoId().withMessage('Invalid subCategory id'),
+        .isMongoId().withMessage('Invalid subCategory id'),
     validationMiddleware
 ];
 
-// const updateSubCategoryValidator = [
-//     check('categoryId').isMongoId().withMessage('Invalid category id'),
-//     validationMiddleware
-// ];
+const updateSubCategoryValidator = [
+    check('subCategoryId').isMongoId().withMessage('Invalid subCategory id'),
+    check('subCategoryId')
+    .optional()
+    .isMongoId().withMessage('Invalid  id'),
+    check('name').notEmpty()
+        .withMessage('SubCategory name is required')
+        .isLength({ min: 3 }).withMessage('SubCategory name must be at least 3 characters long')
+        .isLength({ max: 32 }).withMessage('SubCategory name must be at most 32 characters long'),
+    validationMiddleware
+];
 
-// const deleteSubCategoryValidator = [
-//     check('categoryId').isMongoId().withMessage('Invalid category id'),
-//     validationMiddleware
-// ];
+const deleteSubCategoryValidator = [
+    check('subCategoryId').isMongoId().withMessage('Invalid subCategory id'),
+    validationMiddleware
+];
 
 const createSubCategoryValidator = [
     check('name').notEmpty()
@@ -31,7 +38,7 @@ const createSubCategoryValidator = [
 
 module.exports = {
     getSubCategoryByIdValidator,
-    // updateSubCategoryValidator,
-    // deleteSubCategoryValidator,
+    updateSubCategoryValidator,
+    deleteSubCategoryValidator,
     createSubCategoryValidator
 }
