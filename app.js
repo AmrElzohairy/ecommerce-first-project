@@ -6,6 +6,7 @@ const connectDB = require('./connections/db.connection');
 const app = express();
 const categoriesRoute = require('./routes/categories.route');
 const subCategoryRoute = require('./routes/subCategories.route');
+const brandRoute = require('./routes/brand.route');
 const ApiError = require('./utils/apiError');
 
 
@@ -27,6 +28,7 @@ app.use(express.json());
 // Routes
 app.use('/api/v1/categories', categoriesRoute);
 app.use('/api/v1/subCategories', subCategoryRoute);
+app.use("/api/vq/brand", brandRoute)
 
 // 404 Handler - Must be after all routes
 app.use((req, res, next) => {
@@ -43,7 +45,7 @@ const server = app.listen(PORT, () => {
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
-    console.error("❌ Unhandled Rejection Error...", `Error name: ${err.name}...` , `Error message: ${err.message}`);
+    console.error("❌ Unhandled Rejection Error...", `Error name: ${err.name}...`, `Error message: ${err.message}`);
     server.close(() => {
         console.error("❌ Unhandled Rejection Error... Server is shutting down...");
         process.exit(1);
