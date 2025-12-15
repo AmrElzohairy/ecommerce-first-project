@@ -29,7 +29,12 @@ let getCategorySubCategories = asyncHandler(
         if (!category) {
             return next(new ApiError(404, 'Category not found'));
         }
-        let subCategories = await SubCategory.find({ category: categoryId })
+        let subCategories = await SubCategory.find({ category: categoryId }).populate(
+            {
+                path: 'category',
+                select: 'name'
+            }
+        )
         res.status(200).json({
             status: 'success',
             data: {
