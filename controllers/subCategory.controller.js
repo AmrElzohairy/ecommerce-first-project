@@ -6,7 +6,12 @@ const ApiError = require('../utils/apiError');
 
 let getSubCategories = asyncHandler(
     async (req, res) => {
-        let subCategories = await SubCategory.find({});
+        let subCategories = await SubCategory.find({}).populate(
+            {
+                path: 'category',
+                select: 'name'
+            }
+        );
         res.status(200).json({
             status: 'success',
             data: {
