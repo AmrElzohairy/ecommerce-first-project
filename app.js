@@ -28,7 +28,7 @@ app.use(express.json());
 // Routes
 app.use('/api/v1/categories', categoriesRoute);
 app.use('/api/v1/subCategories', subCategoryRoute);
-app.use("/api/vq/brand", brandRoute)
+app.use("/api/v1/brand", brandRoute)
 
 // 404 Handler - Must be after all routes
 app.use((req, res, next) => {
