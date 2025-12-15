@@ -1,4 +1,5 @@
 const SubCategory = require('../models/subCategorySchema');
+const Category = require('../models/categorySchema');
 const slugify = require('slugify')
 const asyncHandler = require('express-async-handler')
 const ApiError = require('../utils/apiError');
@@ -20,6 +21,24 @@ let getSubCategories = asyncHandler(
         });
     }
 );
+
+let getCategorySubCategories = asyncHandler(
+    async (req, res, next) => {
+        let categoryId = req.params.categoryId;
+        let category = await Category.findById(categoryId);
+        if (!category) {
+            return next(new ApiError(404, 'Category not found'));
+        }
+        let subCategories = await SubCategory.find({ category: categoryId })
+        res.status(200).json({
+            status: 'success',
+            data: {
+                "subCategories": subCategories
+            },
+        });
+    }
+);
+
 
 
 let getSubCategoyById = asyncHandler(
@@ -95,5 +114,6 @@ module.exports = {
     getSubCategoyById,
     createSubCategory,
     updateSubCategory,
-    deleteSubCategory
+    deleteSubCategory,
+    getCategorySubCategories
 }

@@ -24,6 +24,11 @@ const deleteSubCategoryValidator = [
     validationMiddleware
 ];
 
+const getCategorySubCategoriesValidator = [
+    check('categoryId').isMongoId().withMessage('Invalid category id'),
+    validationMiddleware
+];
+
 const createSubCategoryValidator = [
     check('name').notEmpty()
         .withMessage('SubCategory name is required')
@@ -40,5 +45,6 @@ module.exports = {
     getSubCategoryByIdValidator,
     updateSubCategoryValidator,
     deleteSubCategoryValidator,
-    createSubCategoryValidator
+    createSubCategoryValidator,
+    getCategorySubCategoriesValidator
 }
