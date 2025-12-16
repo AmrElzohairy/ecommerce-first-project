@@ -6,7 +6,6 @@ let productSchema = new mongoose.Schema({
         required: [true, 'Product title is required'],
         trim: true,
         minlength: [3, 'Product title must be at least 3 characters long'],
-        maxlength: [50, 'Product title must be at most 50 characters long'],
     },
     slug: {
         type: String,
@@ -49,7 +48,6 @@ let productSchema = new mongoose.Schema({
     brand: {
         type: mongoose.Schema.ObjectId,
         ref: 'Brand',
-        required: true
     },
     ratingsAverage: {
         type: Number,

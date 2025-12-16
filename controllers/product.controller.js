@@ -9,7 +9,11 @@ let getProducts = asyncHandler(async (req, res) => {
     let limit = parseInt(req.query.limit) || 5;
     const skip = (page - 1) * limit;
     let allProductsLength = await Product.countDocuments();
-    let products = await Product.find({}).limit(limit).skip(skip);
+    let products = await Product.find({})
+        .limit(limit)
+        .skip(skip)
+        .populate('category', { __v: 0 })
+        .populate('subCategory', { __v: 0 });
     res.status(200).json({
         status: 'success',
         results: allProductsLength,
@@ -21,7 +25,8 @@ let getProducts = asyncHandler(async (req, res) => {
 
 let getProduct = asyncHandler(async (req, res, next) => {
     let productId = req.params.productId;
-    let product = await Product.findById(productId, { __v: 0 });
+    let product = await Product.findById(productId, { __v: 0 })
+        .populate('category');;
     if (!product) {
         return next(new ApiError(404, 'Product not found'));
     }
@@ -47,7 +52,9 @@ let createProduct = asyncHandler(async (req, res) => {
 let updateProduct = asyncHandler(
     async (req, res, next) => {
         let productId = req.params.productId;
-        req.body.slug = slugify(req.body.title);
+        if (req.body.title) {
+            req.body.slug = slugify(req.body.title);
+        }
         let product = await Product.findByIdAndUpdate({ _id: productId }, req.body, { new: true });
         if (!product) {
             return next(new ApiError(404, 'Product not found'));
