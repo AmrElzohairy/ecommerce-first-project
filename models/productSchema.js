@@ -39,7 +39,7 @@ let productSchema = new mongoose.Schema({
         max: [20, 'Product price must be at most 20 characters long'],
     },
     colors: [String],
-    coverImage: { type: String, required: [true, 'Product cover image is required'] },
+    imageCover: { type: String, required: [true, 'Product image cover is required'] },
     images: [String],
     category: {
         type: mongoose.Schema.ObjectId,
