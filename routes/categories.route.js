@@ -7,7 +7,7 @@ router.route('/')
     .get(getAllCategories)
     .post(createCategoryValidator, createCategory);
 
-router.route('/:Id')
+router.route('/:id')
     .get(getCategoryByIdValidator, getCategoryById)
     .put(updateCategoryValidator, updateCategory)
     .delete(deleteCategoryValidator, deleteCategory);

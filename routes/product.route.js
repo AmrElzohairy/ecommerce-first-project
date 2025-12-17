@@ -17,7 +17,7 @@ router.route('/')
     .get(getProducts)
     .post(createProductValidator, createProduct);
 
-router.route('/:Id')
+router.route('/:id')
     .get(getProductValidator, getProduct)
     .put(updateProductValidator, updateProduct)
     .delete(deleteProductValidator, deleteProduct);

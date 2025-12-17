@@ -7,12 +7,12 @@ router.route('/')
     .post(createSubCategoryValidator, createSubCategory)
     .get(getSubCategories);
 
-router.route('/:Id')
+router.route('/:id')
     .get(getSubCategoryByIdValidator, getSubCategoyById)
     .put(updateSubCategoryValidator, updateSubCategory)
     .delete(deleteSubCategoryValidator, deleteSubCategory);
 
-router.route('/category/:Id')
+router.route('/category/:id')
     .get(getCategorySubCategoriesValidator,getCategorySubCategories);
 
 
