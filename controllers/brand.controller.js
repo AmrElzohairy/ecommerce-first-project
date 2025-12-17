@@ -61,24 +61,6 @@ exports.createBrand = asyncHandler(
     }
 )
 
-exports.updateBrand = asyncHandler(
-    async (req, res, next) => {
-        let brandId = req.params.brandId;
-        let name = req.body.name;
-        let brand = await Brand.findByIdAndUpdate({ _id: brandId }, {
-            name,
-            slug: slugify(name)
-        }, { new: true });
-        if (!brand) {
-            return next(new ApiError(404, 'Brand not found'));
-        }
-        res.status(200).json({
-            status: 'success',
-            data: {
-                "brand": brand
-            },
-        });
-    }
-)
+exports.updateBrand = factory.updateOne(Brand);
 
 exports.deleteBrand = factory.deleteOne(Brand);

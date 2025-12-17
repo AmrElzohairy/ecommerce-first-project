@@ -15,3 +15,17 @@ exports.deleteOne = (Model) => asyncHandler(
         });
     }
 );
+
+exports.updateOne = (Model) => asyncHandler(
+    async (req, res, next) => {
+        let { id } = req.params;
+        let document = await Model.findByIdAndUpdate(id, req.body, { new: true });
+        if (!document) {
+            return next(new ApiError(404, 'Document not found'));
+        }
+        res.status(200).json({
+            status: 'success',
+            data: document
+        });
+    }
+);
