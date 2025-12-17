@@ -8,7 +8,7 @@ const qs = require('qs');
 let getProducts = asyncHandler(async (req, res) => {
     //filter
     let queryObj = qs.parse(req.query);
-    let excludeFields = ['page', 'limit', 'sort', 'fields'];
+    let excludeFields = ['page', 'limit', 'sort', 'fields', 'keyword'];
     excludeFields.forEach(v => delete queryObj[v]);
     // Apply filtration using [gte, gt, lte, lt]
     let queryStr = JSON.stringify(queryObj);
@@ -27,7 +27,7 @@ let getProducts = asyncHandler(async (req, res) => {
         .limit(limit)
         .skip(skip)
         .populate('category', { __v: 0 })
-       
+
 
     //sorting
     if (req.query.sort) {
@@ -43,6 +43,17 @@ let getProducts = asyncHandler(async (req, res) => {
         mongooseQuery = mongooseQuery.select(fields);
     } else {
         mongooseQuery = mongooseQuery.select('-__v');
+    }
+
+    //search
+    if (req.query.keyword) {
+        let query = {};
+        query.$or = [
+            { title: { $regex: req.query.keyword, $options: 'i' } },
+            { description: { $regex: req.query.keyword, $options: 'i' } },
+        ];
+        mongooseQuery = mongooseQuery.find(query);
+
     }
 
 
