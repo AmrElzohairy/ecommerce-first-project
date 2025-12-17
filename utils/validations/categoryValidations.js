@@ -2,17 +2,17 @@ const { check } = require('express-validator');
 const validationMiddleware = require('../../middlewares/validatorMiddleware');
 
 const getCategoryByIdValidator = [
-    check('categoryId').isMongoId().withMessage('Invalid category id'),
+    check('id').isMongoId().withMessage('Invalid category id'),
     validationMiddleware
 ];
 
 const updateCategoryValidator = [
-    check('categoryId').isMongoId().withMessage('Invalid category id'),
+    check('id').isMongoId().withMessage('Invalid category id'),
     validationMiddleware
 ];
 
 const deleteCategoryValidator = [
-    check('categoryId').isMongoId().withMessage('Invalid category id'),
+    check('id').isMongoId().withMessage('Invalid category id'),
     validationMiddleware
 ];
 

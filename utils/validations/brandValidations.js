@@ -2,17 +2,17 @@ const { check } = require('express-validator');
 const validationMiddleware = require('../../middlewares/validatorMiddleware');
 
 const getBrandByIdValidator = [
-    check('brandId').isMongoId().withMessage('Invalid Brand id'),
+    check('id').isMongoId().withMessage('Invalid Brand id'),
     validationMiddleware
 ];
 
 const updateBrandValidator = [
-    check('brandId').isMongoId().withMessage('Invalid Brand id'),
+    check('id').isMongoId().withMessage('Invalid Brand id'),
     validationMiddleware
 ];
 
 const deleteBrandValidator = [
-    check('brandId').isMongoId().withMessage('Invalid Brand id'),
+    check('id').isMongoId().withMessage('Invalid Brand id'),
     validationMiddleware
 ];
 

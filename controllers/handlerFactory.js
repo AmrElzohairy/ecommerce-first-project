@@ -5,7 +5,7 @@ const ApiError = require('../utils/apiError');
 exports.deleteOne = (Model) => asyncHandler(
     async (req, res, next) => {
         let { id } = req.params;
-        let document = await Model.findByIdAndDelete({ _id: id });
+        let document = await Model.findByIdAndDelete(id);
         if (!document) {
             return next(new ApiError(404, 'Document not found'));
         }
