@@ -27,7 +27,7 @@ let getProducts = asyncHandler(async (req, res) => {
         .limit(limit)
         .skip(skip)
         .populate('category', { __v: 0 })
-        .populate('subCategory', { __v: 0 });
+       
 
     //sorting
     if (req.query.sort) {
@@ -35,6 +35,14 @@ let getProducts = asyncHandler(async (req, res) => {
         mongooseQuery = mongooseQuery.sort(sortBy);
     } else {
         mongooseQuery = mongooseQuery.sort('-createdAt');
+    }
+
+    //fields
+    if (req.query.fields) {
+        let fields = req.query.fields.split(',').join(' ');
+        mongooseQuery = mongooseQuery.select(fields);
+    } else {
+        mongooseQuery = mongooseQuery.select('-__v');
     }
 
 
