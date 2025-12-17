@@ -1,6 +1,5 @@
 const SubCategory = require('../models/subCategorySchema');
 const Category = require('../models/categorySchema');
-const slugify = require('slugify')
 const asyncHandler = require('express-async-handler')
 const ApiError = require('../utils/apiError');
 const ApiFeatures = require('../utils/apiFeatures');
@@ -72,20 +71,7 @@ let getSubCategoyById = asyncHandler(
 );
 
 
-let createSubCategory = asyncHandler(async (req, res) => {
-    const { name, category } = req.body;
-    let subCategory = await SubCategory.create({
-        name,
-        slug: slugify(name),
-        category
-    });
-    res.status(201).json({
-        status: 'success',
-        data: {
-            "category": subCategory
-        },
-    });
-})
+let createSubCategory = factory.createOne(SubCategory);
 
 let updateSubCategory = factory.updateOne(SubCategory);
 

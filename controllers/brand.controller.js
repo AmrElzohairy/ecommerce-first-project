@@ -1,5 +1,4 @@
 const Brand = require('../models/brandSchema');
-const slugify = require('slugify')
 const asyncHandler = require('express-async-handler')
 const ApiError = require('../utils/apiError');
 const ApiFeatures = require('../utils/apiFeatures');
@@ -45,21 +44,7 @@ exports.getBrandById = asyncHandler(
     }
 )
 
-exports.createBrand = asyncHandler(
-    async (req, res) => {
-        const { name } = req.body;
-        let brand = await Brand.create({
-            name,
-            slug: slugify(name)
-        });
-        res.status(201).json({
-            status: 'success',
-            data: {
-                "brand": brand
-            },
-        });
-    }
-)
+exports.createBrand = factory.createOne(Brand);
 
 exports.updateBrand = factory.updateOne(Brand);
 

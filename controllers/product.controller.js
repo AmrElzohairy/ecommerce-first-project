@@ -1,5 +1,4 @@
 const Product = require('../models/productSchema');
-const slugify = require('slugify')
 const asyncHandler = require('express-async-handler')
 const ApiError = require('../utils/apiError');
 const ApiFeatures = require('../utils/apiFeatures');
@@ -43,16 +42,7 @@ let getProduct = asyncHandler(async (req, res, next) => {
     });
 });
 
-let createProduct = asyncHandler(async (req, res) => {
-    req.body.slug = slugify(req.body.title);
-    let product = await Product.create(req.body);
-    res.status(201).json({
-        status: 'success',
-        data: {
-            "product": product
-        },
-    });
-})
+let createProduct = factory.createOne(Product);
 
 let updateProduct = factory.updateOne(Product);
 
