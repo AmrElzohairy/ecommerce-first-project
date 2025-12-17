@@ -3,18 +3,24 @@ const Category = require('../models/categorySchema');
 const slugify = require('slugify')
 const asyncHandler = require('express-async-handler')
 const ApiError = require('../utils/apiError');
+const ApiFeatures = require('../utils/apiFeatures');
 
 
 let getSubCategories = asyncHandler(
     async (req, res) => {
-        let subCategories = await SubCategory.find({}).populate(
-            {
-                path: 'category',
-                select: 'name'
-            }
-        );
+        const countDocuments = await SubCategory.countDocuments();
+        let apiFeatures = new ApiFeatures(SubCategory.find({}), req.query)
+            .search(['name'])
+            .filter()
+            .sort()
+            .limitFields()
+            .paginate(countDocuments)
+        let { mongooseQuery, paginationResult } = apiFeatures;
+        let subCategories = await mongooseQuery;
         res.status(200).json({
             status: 'success',
+            results: subCategories.length,
+            paginationResult,
             data: {
                 "subCategories": subCategories
             },
