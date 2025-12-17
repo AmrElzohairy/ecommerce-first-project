@@ -3,7 +3,7 @@ const factory = require('./handlerFactory');
 
 
 
-let getProducts = factory.getAll(Product, Product.countDocuments, ['title', 'decription']);
+let getProducts = factory.getAll(Product, ['title', 'decription']);
 let getProduct = factory.getOne(Product);
 
 let createProduct = factory.createOne(Product);

@@ -6,7 +6,7 @@ const factory = require('./handlerFactory');
 
 
 
-let getSubCategories = factory.getAll(SubCategory, SubCategory.countDocuments, ['name']);
+let getSubCategories = factory.getAll(SubCategory, ['name']);
 
 let getCategorySubCategories = asyncHandler(
     async (req, res, next) => {

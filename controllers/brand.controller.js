@@ -2,7 +2,7 @@ const Brand = require('../models/brandSchema');
 const factory = require('./handlerFactory');
 
 
-exports.getBrands = factory.getAll(Brand, Brand.countDocuments, ['name']);
+exports.getBrands = factory.getAll(Brand, ['name']);
 
 exports.getBrandById = factory.getOne(Brand);
 
