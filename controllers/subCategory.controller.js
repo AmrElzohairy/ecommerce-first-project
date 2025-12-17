@@ -2,32 +2,11 @@ const SubCategory = require('../models/subCategorySchema');
 const Category = require('../models/categorySchema');
 const asyncHandler = require('express-async-handler')
 const ApiError = require('../utils/apiError');
-const ApiFeatures = require('../utils/apiFeatures');
 const factory = require('./handlerFactory');
 
 
 
-let getSubCategories = asyncHandler(
-    async (req, res) => {
-        const countDocuments = await SubCategory.countDocuments();
-        let apiFeatures = new ApiFeatures(SubCategory.find({}), req.query)
-            .search(['name'])
-            .filter()
-            .sort()
-            .limitFields()
-            .paginate(countDocuments)
-        let { mongooseQuery, paginationResult } = apiFeatures;
-        let subCategories = await mongooseQuery;
-        res.status(200).json({
-            status: 'success',
-            results: subCategories.length,
-            paginationResult,
-            data: {
-                "subCategories": subCategories
-            },
-        });
-    }
-);
+let getSubCategories = factory.getAll(SubCategory, SubCategory.countDocuments, ['name']);
 
 let getCategorySubCategories = asyncHandler(
     async (req, res, next) => {
