@@ -2,20 +2,27 @@ const Brand = require('../models/brandSchema');
 const slugify = require('slugify')
 const asyncHandler = require('express-async-handler')
 const ApiError = require('../utils/apiError');
+const ApiFeatures = require('../utils/apiFeatures');
 
 
-exports.getAllBrands = asyncHandler(
+exports.getBrands = asyncHandler(
     async (req, res) => {
-        let page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 5;
-        const skip = (page - 1) * limit;
-        let allBrandsLength = await Brand.countDocuments();
-        let brands = await Brand.find({}).limit(limit).skip(skip);
+        const countDocuments = await Brand.countDocuments();
+        let apiFeatures = new ApiFeatures(Brand.find({}), req.query)
+            .search(['name'])
+            .filter()
+            .sort()
+            .limitFields()
+            .paginate(countDocuments)
+        let { mongooseQuery, paginationResult } = apiFeatures;
+        let brands = await mongooseQuery;
+
         res.status(200).json({
             status: 'success',
-            results: allBrandsLength,
+            results: brands.length,
+            paginationResult,
             data: {
-                "brands": brands
+                "Brands": brands
             },
         });
     }
@@ -54,7 +61,7 @@ exports.createBrand = asyncHandler(
 )
 
 exports.updateBrand = asyncHandler(
-    async (req, res , next) => {
+    async (req, res, next) => {
         let brandId = req.params.brandId;
         let name = req.body.name;
         let brand = await Brand.findByIdAndUpdate({ _id: brandId }, {
@@ -62,7 +69,7 @@ exports.updateBrand = asyncHandler(
             slug: slugify(name)
         }, { new: true });
         if (!brand) {
-         return next(new ApiError(404, 'Brand not found'));
+            return next(new ApiError(404, 'Brand not found'));
         }
         res.status(200).json({
             status: 'success',
@@ -74,11 +81,11 @@ exports.updateBrand = asyncHandler(
 )
 
 exports.deleteBrand = asyncHandler(
-    async (req, res , next) => {
+    async (req, res, next) => {
         let brandId = req.params.brandId;
         let brand = await Brand.findByIdAndDelete({ _id: brandId });
         if (!brand) {
-         return next(new ApiError(404, 'Brand not found'));
+            return next(new ApiError(404, 'Brand not found'));
         }
         res.status(200).json({
             status: 'success',
