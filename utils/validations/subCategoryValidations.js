@@ -27,7 +27,7 @@ const updateSubCategoryValidator = [
 ];
 
 const deleteSubCategoryValidator = [
-    check('subCategoryId').isMongoId().withMessage('Invalid subCategory id'),
+    check('id').isMongoId().withMessage('Invalid subCategory id'),
     validationMiddleware
 ];
 
