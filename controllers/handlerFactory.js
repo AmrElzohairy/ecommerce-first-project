@@ -39,3 +39,17 @@ exports.createOne = (Model) => asyncHandler(
         });
     }
 );
+
+exports.getOne = (Model) => asyncHandler(
+    async (req, res, next) => {
+        let { id } = req.params;
+        let document = await Model.findById(id);
+        if (!document) {
+            return next(new ApiError(404, 'Document not found'));
+        }
+        res.status(200).json({
+            status: 'success',
+            data: document
+        });
+    }
+);

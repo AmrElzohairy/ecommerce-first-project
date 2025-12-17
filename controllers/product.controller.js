@@ -1,6 +1,5 @@
 const Product = require('../models/productSchema');
 const asyncHandler = require('express-async-handler')
-const ApiError = require('../utils/apiError');
 const ApiFeatures = require('../utils/apiFeatures');
 const factory = require('./handlerFactory');
 
@@ -27,20 +26,7 @@ let getProducts = asyncHandler(async (req, res) => {
     });
 });
 
-let getProduct = asyncHandler(async (req, res, next) => {
-    let productId = req.params.productId;
-    let product = await Product.findById(productId, { __v: 0 })
-        .populate('category');;
-    if (!product) {
-        return next(new ApiError(404, 'Product not found'));
-    }
-    res.status(200).json({
-        status: 'success',
-        data: {
-            "product": product
-        },
-    });
-});
+let getProduct =   factory.getOne(Product);
 
 let createProduct = factory.createOne(Product);
 

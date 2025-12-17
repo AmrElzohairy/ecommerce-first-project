@@ -1,6 +1,5 @@
 const categoryModel = require('../models/categorySchema');
 const asyncHandler = require('express-async-handler')
-const ApiError = require('../utils/apiError');
 const ApiFeatures = require('../utils/apiFeatures');
 const factory = require('./handlerFactory');
 
@@ -26,19 +25,7 @@ exports.getAllCategories = asyncHandler(async (req, res) => {
   });
 });
 
-exports.getCategoryById = asyncHandler(async (req, res, next) => {
-  let categoryId = req.params.categoryId;
-  let category = await categoryModel.findById(categoryId, { __v: 0 });
-  if (!category) {
-    return next(new ApiError(404, 'Category not found'));
-  }
-  res.status(200).json({
-    status: 'success',
-    data: {
-      "category": category
-    },
-  });
-});
+exports.getCategoryById = factory.getOne(categoryModel);
 
 exports.createCategory = factory.createOne(categoryModel);
 

@@ -53,23 +53,7 @@ let getCategorySubCategories = asyncHandler(
 
 
 
-let getSubCategoyById = asyncHandler(
-    async (req, res, next) => {
-        let { subCategoryId } = req.params;
-        let subCategory = await SubCategory.findById(subCategoryId);
-        if (!subCategory) {
-            return next(new ApiError(404, 'SubCategory not found'));
-        }
-        res.status(200).json({
-            status: 'success',
-            data: {
-                "subCategory": subCategory
-            },
-        });
-
-    }
-);
-
+let getSubCategoyById = factory.getOne(SubCategory);
 
 let createSubCategory = factory.createOne(SubCategory);
 
