@@ -10,7 +10,7 @@ router.route('/')
     .post(createBrandValidator, createBrand)
 
 
-router.route('/:brandId')
+router.route('/:Id')
     .get(getBrandByIdValidator, getBrandById)
     .put(updateBrandValidator, updateBrand)
     .delete(deleteBrandValidator, deleteBrand)
