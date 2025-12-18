@@ -1,13 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { getBrands, getBrandById, createBrand, deleteBrand, updateBrand } = require('../controllers/brand.controller');
+const {
+    getBrands,
+    getBrandById,
+    createBrand,
+    deleteBrand,
+    updateBrand,
+    uploadBrandImage,
+    resizeImage
+} = require('../controllers/brand.controller');
 const { getBrandByIdValidator,
     updateBrandValidator,
     deleteBrandValidator,
     createBrandValidator } = require("../utils/validations/brandValidations");
 router.route('/')
     .get(getBrands)
-    .post(createBrandValidator, createBrand)
+    .post(
+        uploadBrandImage,
+        resizeImage,
+        createBrandValidator, createBrand)
 
 
 router.route('/:id')
