@@ -4,6 +4,8 @@ const asyncHandler = require('express-async-handler');
 const { uploadSingleImage } = require('../middlewares/uploadImageMiddleware');
 const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
+const ApiError = require('../utils/apiError');
+const bcrypt = require('bcrypt');
 
 
 // Upload single image
@@ -34,6 +36,44 @@ exports.getUserById = factory.getOne(User);
 
 exports.createUser = factory.createOne(User);
 
-exports.updateUser = factory.updateOne(User);
+exports.updateUser = asyncHandler(
+    async (req, res, next) => {
+        let { id } = req.params;
+        let user = await User.findByIdAndUpdate(id,
+            {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                phone: req.body.phone,
+                profileImg: req.body.profileImg
+            },
+            { new: true });
+        if (!user) {
+            return next(new ApiError(404, 'User not found'));
+        }
+        res.status(200).json({
+            status: 'success',
+            data: user
+        });
+    }
+);
+
+exports.changePassword = asyncHandler(
+    async (req, res, next) => {
+        let { id } = req.params;
+        let user = await User.findByIdAndUpdate(id,
+            {
+                password: bcrypt.hashSync(req.body.newPassword, 12)
+            },
+        );
+        if (!user) {
+            return next(new ApiError(404, 'User not found'));
+        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Password Changed Successfully'
+        });
+    }
+);
 
 exports.deleteUser = factory.deleteOne(User);

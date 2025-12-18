@@ -1,6 +1,7 @@
 const { check } = require('express-validator');
 const validationMiddleware = require('../../middlewares/validatorMiddleware');
 const User = require('../../models/userSchema');
+const bcrypt = require('bcrypt');
 
 const getUserValidator = [
     check('id').isMongoId().withMessage('Invalid id Format'),
@@ -17,6 +18,44 @@ const deleteUserValidator = [
 const updateUserValidator = [
     check('id')
         .isMongoId().withMessage('Invalid id Format'),
+    check('email')
+        .optional()
+        .isEmail()
+        .withMessage('Invalid email format'),
+    validationMiddleware
+]
+
+const changePasswordValidator = [
+    check('id')
+        .isMongoId().withMessage('Invalid id Format'),
+    check('currentPassword')
+        .notEmpty()
+        .withMessage('Current password is required')
+        .custom(async (value, { req }) => {
+            const user = await User.findById(req.params.id);
+            if (!user) {
+                return Promise.reject('User not found');
+            }
+            const isPasswordCorrect = await bcrypt.compare(value, user.password);
+            if (!isPasswordCorrect) {
+                return Promise.reject('Current password is incorrect');
+            }
+            return true;
+        }),
+    check('newPassword')
+        .notEmpty()
+        .withMessage('New password is required')
+        .isLength({ min: 6 })
+        .withMessage('New password must be at least 6 characters long'),
+    check('passwordConfirmation')
+        .notEmpty()
+        .withMessage('Password confirmation is required')
+        .custom((passwordConfirmation, { req }) => {
+            if (passwordConfirmation !== req.body.newPassword) {
+                return Promise.reject('Password confirmation does not match new password');
+            }
+            return true;
+        }),
     validationMiddleware
 ]
 
@@ -82,6 +121,7 @@ module.exports = {
     getUserValidator,
     deleteUserValidator,
     updateUserValidator,
-    createUserValidator
+    createUserValidator,
+    changePasswordValidator
 }
 

@@ -30,7 +30,7 @@ app.use(express.json());
 // Routes
 app.use('/api/v1/categories', categoriesRoute);
 app.use('/api/v1/subCategories', subCategoryRoute);
-app.use("/api/v1/brand", brandRoute),
+app.use("/api/v1/brand", brandRoute);
 app.use("/api/v1/products", product);
 app.use("/api/v1/users", userRoute);
 
