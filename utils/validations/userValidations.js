@@ -50,12 +50,28 @@ const createUserValidator = [
         .notEmpty()
         .withMessage('Phone number is required')
         .isMobilePhone(['ar-EG', 'ar,SA'])
-        .withMessage('Invalid phone number format for Egypt or Saudi Arabia'),
+        .withMessage('Invalid phone number format for Egypt or Saudi Arabia')
+        .custom(async (value) => {
+            const user = await User.findOne({ phone: value });
+            if (user) {
+                return Promise.reject('Phone number already exists');
+            }
+        })
+    ,
+    check('passwordConfirmation')
+        .notEmpty()
+        .withMessage('Password confirmation is required'),
     check('password')
         .notEmpty()
         .withMessage('Password is required')
         .isLength({ min: 6 })
-        .withMessage('Password must be at least 6 characters long'),
+        .withMessage('Password must be at least 6 characters long')
+        .custom((password, { req }) => {
+            if (password !== req.body.passwordConfirmation) {
+                return Promise.reject('Password confirmation does not match');
+            }
+            return true;
+        }),
     check('profileImg')
         .optional(),
     validationMiddleware
