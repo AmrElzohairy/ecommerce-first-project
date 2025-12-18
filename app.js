@@ -9,6 +9,7 @@ const subCategoryRoute = require('./routes/subCategories.route');
 const brandRoute = require('./routes/brand.route');
 const userRoute = require('./routes/user.route');
 const product = require('./routes/product.route');
+const authRoute = require('./routes/auth.route');
 const ApiError = require('./utils/apiError');
 
 
@@ -33,6 +34,7 @@ app.use('/api/v1/subCategories', subCategoryRoute);
 app.use("/api/v1/brand", brandRoute);
 app.use("/api/v1/products", product);
 app.use("/api/v1/users", userRoute);
+app.use("/api/v1/auth", authRoute);
 
 // 404 Handler - Must be after all routes
 app.use((req, res, next) => {
