@@ -19,17 +19,16 @@ router.route('/')
     .get(getUsers)
     .post(
         uploadUserImage,
-        resizeImage,
         createUserValidator,
-
+        resizeImage,
         createUser)
 
 router.route('/:id')
     .get(getUserValidator, getUserById)
     .put(
         uploadUserImage,
-        resizeImage,
         updateUserValidator,
+        resizeImage,
         updateUser)
     .delete(deleteUserValidator, deleteUser)
 
