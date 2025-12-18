@@ -7,6 +7,7 @@ const app = express();
 const categoriesRoute = require('./routes/categories.route');
 const subCategoryRoute = require('./routes/subCategories.route');
 const brandRoute = require('./routes/brand.route');
+const userRoute = require('./routes/user.route');
 const product = require('./routes/product.route');
 const ApiError = require('./utils/apiError');
 
@@ -31,6 +32,7 @@ app.use('/api/v1/categories', categoriesRoute);
 app.use('/api/v1/subCategories', subCategoryRoute);
 app.use("/api/v1/brand", brandRoute),
 app.use("/api/v1/products", product);
+app.use("/api/v1/users", userRoute);
 
 // 404 Handler - Must be after all routes
 app.use((req, res, next) => {
