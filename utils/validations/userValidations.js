@@ -1,10 +1,11 @@
 const { check } = require('express-validator');
 const validationMiddleware = require('../../middlewares/validatorMiddleware');
+const User = require('../../models/userSchema');
 
 const getUserValidator = [
     check('id').isMongoId().withMessage('Invalid id Format'),
     validationMiddleware,
-    
+
 ]
 
 const deleteUserValidator = [
@@ -38,12 +39,18 @@ const createUserValidator = [
         .notEmpty()
         .withMessage('Email is required')
         .isEmail()
-        .withMessage('Invalid email format'),
+        .withMessage('Invalid email format')
+        .custom(async (value) => {
+            const user = await User.findOne({ email: value });
+            if (user) {
+                return Promise.reject('E-mail already exists');
+            }
+        }),
     check('phone')
         .notEmpty()
         .withMessage('Phone number is required')
-        .isMobilePhone()
-        .withMessage('Invalid phone number'),
+        .isMobilePhone(['ar-EG', 'ar,SA'])
+        .withMessage('Invalid phone number format for Egypt or Saudi Arabia'),
     check('password')
         .notEmpty()
         .withMessage('Password is required')
