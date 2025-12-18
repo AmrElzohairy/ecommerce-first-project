@@ -18,12 +18,15 @@ router.route('/')
     .post(
         uploadUserImage,
         resizeImage,
-        createBrandValidator, createUser)
+        createUser)
 
 router.route('/:id')
-    .get(getBrandByIdValidator, getUserById)
-    .put(updateBrandValidator, updateUser)
-    .delete(deleteBrandValidator, deleteUser)
+    .get(getUserById)
+    .put(
+        uploadUserImage,
+        resizeImage,
+        updateUser)
+    .delete(deleteUser)
 
 
 module.exports = router;
