@@ -17,7 +17,14 @@ exports.signUpValidator = [
         .notEmpty()
         .withMessage('Email is required')
         .isEmail()
-        .withMessage('Invalid email format'),
+        .withMessage('Invalid email format')
+        .custom(async (value) => {
+            const user = await User.findOne({ email: value });
+            if (user) {
+                return Promise.reject('E-mail already exists');
+            }
+        })
+    ,
     check('password')
         .notEmpty()
         .withMessage('Password is required')
@@ -28,5 +35,19 @@ exports.signUpValidator = [
         .withMessage('Phone number is required')
         .isMobilePhone(['ar-EG', 'ar,SA'])
         .withMessage('Invalid phone number format'),
+    validationMiddleware
+];
+
+exports.loginValidator = [
+    check('email')
+        .notEmpty()
+        .withMessage('Email is required')
+        .isEmail()
+        .withMessage('Invalid email format'),
+    check('password')
+        .notEmpty()
+        .withMessage('Password is required')
+        .isLength({ min: 6 })
+        .withMessage('Password must be at least 6 characters long'),
     validationMiddleware
 ];
