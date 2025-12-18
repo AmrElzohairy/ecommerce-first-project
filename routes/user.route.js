@@ -9,24 +9,28 @@ const {
     uploadUserImage,
     resizeImage
 } = require('../controllers/user.controller');
-const { getBrandByIdValidator,
-    updateBrandValidator,
-    deleteBrandValidator,
-    createBrandValidator } = require("../utils/validations/brandValidations");
+const {
+    getUserValidator,
+    deleteUserValidator,
+    updateUserValidator,
+    createUserValidator
+} = require("../utils/validations/userValidations");
 router.route('/')
     .get(getUsers)
     .post(
+        createUserValidator,
         uploadUserImage,
         resizeImage,
         createUser)
 
 router.route('/:id')
-    .get(getUserById)
+    .get(getUserValidator, getUserById)
     .put(
+        updateUserValidator,
         uploadUserImage,
         resizeImage,
         updateUser)
-    .delete(deleteUser)
+    .delete(deleteUserValidator, deleteUser)
 
 
 module.exports = router;

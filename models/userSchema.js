@@ -11,10 +11,6 @@ const userSchema = new mongoose.Schema({
         required: [true, "Last name is required"],
         trim: true
     },
-    slug: {
-        type: String,
-        lowercase: true
-    },
     email: {
         type: String,
         required: true,
