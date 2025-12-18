@@ -56,6 +56,9 @@ const createUserValidator = [
         .withMessage('Password is required')
         .isLength({ min: 6 })
         .withMessage('Password must be at least 6 characters long'),
+    check('role').contains(['user', 'admin']).withMessage('Role must be either user or admin'),
+    check('profileImg')
+        .optional(),
     validationMiddleware
 ]
 

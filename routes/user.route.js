@@ -18,17 +18,18 @@ const {
 router.route('/')
     .get(getUsers)
     .post(
-        createUserValidator,
         uploadUserImage,
         resizeImage,
+        createUserValidator,
+
         createUser)
 
 router.route('/:id')
     .get(getUserValidator, getUserById)
     .put(
-        updateUserValidator,
         uploadUserImage,
         resizeImage,
+        updateUserValidator,
         updateUser)
     .delete(deleteUserValidator, deleteUser)
 
