@@ -21,3 +21,14 @@ exports.login = asyncHandler(async (req, res, next) => {
     const token = createToken(user);
     res.status(200).json({ data: user, token });
 });
+
+exports.protect = asyncHandler(async (req, res, next) => {
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) {
+        return next(new ApiError(401, 'You are not logged in! Please log in to get access.'));
+    }
+});
