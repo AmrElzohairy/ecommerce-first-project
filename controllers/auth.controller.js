@@ -34,4 +34,9 @@ exports.protect = asyncHandler(async (req, res, next) => {
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    const currentUser = await User.findById(decoded.userId);
+    if (!currentUser) {
+        return next(new ApiError(401, 'This user does not exist anymore.'));
+    }
+
 });
