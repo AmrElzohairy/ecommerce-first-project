@@ -3,6 +3,7 @@ const ApiError = require('../utils/apiError');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const createToken = require('../utils/createToken');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -31,4 +32,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
     if (!token) {
         return next(new ApiError(401, 'You are not logged in! Please log in to get access.'));
     }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
 });
