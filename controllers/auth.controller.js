@@ -39,4 +39,13 @@ exports.protect = asyncHandler(async (req, res, next) => {
         return next(new ApiError(401, 'This user does not exist anymore.'));
     }
 
+    if (currentUser.passwordChangedAt) {
+        const changedTimestamp = parseInt(currentUser.passwordChangedAt.getTime() / 1000, 10);
+        if (decoded.iat < changedTimestamp) {
+            return next(new ApiError(401, 'User recently changed password! Please log in again.'));
+        }
+    }
+    req.user = currentUser;
+    next();
+
 });

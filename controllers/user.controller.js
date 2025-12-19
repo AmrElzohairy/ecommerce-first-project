@@ -63,7 +63,8 @@ exports.changePassword = asyncHandler(
         let { id } = req.params;
         let user = await User.findByIdAndUpdate(id,
             {
-                password: bcrypt.hashSync(req.body.newPassword, 12)
+                password: bcrypt.hashSync(req.body.newPassword, 12),
+                passwordChangedAt: Date.now()
             },
         );
         if (!user) {
