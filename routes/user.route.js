@@ -13,7 +13,8 @@ const {
     resizeImage,
     getMe,
     changePasswordMe,
-    updateMe
+    updateMe,
+    deleteMe
 } = require('../controllers/user.controller');
 const {
     getUserValidator,
@@ -49,6 +50,10 @@ router.route('/me')
         uploadUserImage,
         resizeImage,
         changePasswordMe
+    )
+    .delete(
+        auth.protect,
+        deleteMe
     );
 
 

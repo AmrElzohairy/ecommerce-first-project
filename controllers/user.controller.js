@@ -126,3 +126,16 @@ exports.updateMe = asyncHandler(
         });
     }
 );
+
+exports.deleteMe = asyncHandler(
+    async (req, res, next) => {
+        let user = await User.findByIdAndDelete(req.user._id);
+        if (!user) {
+            return next(new ApiError(404, 'User not found'));
+        }
+        res.status(204).json({
+            status: 'success',
+            data: null,
+        });
+    }
+);
