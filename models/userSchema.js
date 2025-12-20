@@ -25,9 +25,17 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minlenght: [6, "Password must be at least 6 characters long"]
+        minlenght: [6, "Password must be at least 6 characters long"],
+        select: false
     },
-    passwordChangedAt: Date,
+    passwordChangedAt: {
+        type: Date,
+        select: false
+    },
+    passwordResetCode: {
+        type: String,
+        select: false
+    },
     role: {
         type: String,
         enum: ['user', 'admin', 'manager'],
@@ -46,6 +54,20 @@ userSchema.pre('save', async function () {
 });
 
 
+// Remove __v from responses
+userSchema.set('toJSON', {
+    transform: function (doc, ret) {
+        delete ret.__v;
+        return ret;
+    }
+});
+
+userSchema.set('toObject', {
+    transform: function (doc, ret) {
+        delete ret.__v;
+        return ret;
+    }
+});
 
 
 

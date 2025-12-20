@@ -31,3 +31,10 @@ exports.allowedTo = (...roles) => asyncHandler(async (req, res, next) => {
     }
     next();
 });
+
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        return next(new ApiError(404, `There is no user with email ${req.body.email}`));
+    }
+});
