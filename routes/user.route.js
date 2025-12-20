@@ -12,14 +12,15 @@ const {
     uploadUserImage,
     resizeImage,
     getMe,
-    changePasswordMe
+    changePasswordMe,
+    updateMe
 } = require('../controllers/user.controller');
 const {
     getUserValidator,
     deleteUserValidator,
     updateUserValidator,
     createUserValidator,
-    changePasswordValidator
+    changePasswordValidator,
 } = require("../utils/validations/userValidations");
 router.route('/')
     .get(getUsers)
@@ -32,7 +33,11 @@ router.route('/')
         createUser)
 
 
-
+router.route('/me/updateMe')
+    .put(
+        auth.protect,
+        updateMe
+    );
 router.route('/me')
     .get(
         auth.protect,

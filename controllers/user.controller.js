@@ -106,3 +106,23 @@ exports.changePasswordMe = asyncHandler(
         });
     }
 );
+
+exports.updateMe = asyncHandler(
+    async (req, res, next) => {
+        let user = await User.findByIdAndUpdate(req.user._id,
+            {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                phone: req.body.phone,
+            },
+            { new: true });
+        if (!user) {
+            return next(new ApiError(404, 'User not found'));
+        }
+        res.status(200).json({
+            status: 'success',
+            data: user,
+        });
+    }
+);
