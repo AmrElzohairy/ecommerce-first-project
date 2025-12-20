@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../controllers/auth.controller');
+const roles = require('../utils/userRoles');
 const {
     getUsers,
     getUserById,
@@ -8,7 +10,8 @@ const {
     deleteUser,
     changePassword,
     uploadUserImage,
-    resizeImage
+    resizeImage,
+    getMe
 } = require('../controllers/user.controller');
 const {
     getUserValidator,
@@ -20,6 +23,8 @@ const {
 router.route('/')
     .get(getUsers)
     .post(
+        auth.protect,
+        auth.allowedTo(roles.ADMIN, roles.Manager),
         uploadUserImage,
         createUserValidator,
         resizeImage,
@@ -27,21 +32,33 @@ router.route('/')
 
 
 
+router.route('/me')
+    .get(
+        auth.protect,
+        getMe,
+        getUserById
+    )
+    
 router.route('/:id')
     .get(getUserValidator, getUserById)
     .put(
+        auth.protect,
+        auth.allowedTo(roles.ADMIN, roles.Manager),
         uploadUserImage,
         updateUserValidator,
         resizeImage,
         updateUser)
     .delete(deleteUserValidator, deleteUser)
 
-
 router.route('/changePassword/:id')
     .put(
+        auth.protect,
+        auth.allowedTo(roles.ADMIN, roles.Manager),
         changePasswordValidator,
         changePassword
     )
+
+
 
 
 module.exports = router;

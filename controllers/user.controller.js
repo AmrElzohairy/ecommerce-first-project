@@ -78,3 +78,10 @@ exports.changePassword = asyncHandler(
 );
 
 exports.deleteUser = factory.deleteOne(User);
+
+exports.getMe = asyncHandler(
+    async (req, res, next) => {
+        req.params.id = req.user._id;
+        next();
+    }
+);

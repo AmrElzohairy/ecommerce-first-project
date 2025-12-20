@@ -4,8 +4,9 @@ const ApiError = require('../utils/apiError');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const createToken = require('../utils/createToken');
-const { protectRoutes } = require('../middlewares/protectRoutesMiddleware');
 const sendEmail = require('../utils/sendEmail');
+const jwt = require('jsonwebtoken');
+
 
 
 
@@ -25,7 +26,32 @@ exports.login = asyncHandler(async (req, res, next) => {
     res.status(200).json({ data: user, token });
 });
 
-exports.protect = protectRoutes;
+exports.protect = asyncHandler(async (req, res, next) => {
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) {
+        return next(new ApiError(401, 'You are not logged in! Please log in to get access.'));
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const currentUser = await User.findById(decoded.userId);
+    if (!currentUser) {
+        return next(new ApiError(401, 'This user does not exist anymore.'));
+    }
+
+    if (currentUser.passwordChangedAt) {
+        const changedTimestamp = parseInt(currentUser.passwordChangedAt.getTime() / 1000, 10);
+        if (decoded.iat < changedTimestamp) {
+            return next(new ApiError(401, 'User recently changed password! Please log in again.'));
+        }
+    }
+    req.user = currentUser;
+    next();
+
+});
 
 exports.allowedTo = (...roles) => asyncHandler(async (req, res, next) => {
     if (!roles.includes(req.user.role)) {
