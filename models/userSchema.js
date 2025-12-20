@@ -26,23 +26,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlenght: [6, "Password must be at least 6 characters long"],
-        select: false
     },
     passwordChangedAt: {
         type: Date,
-        select: false
     },
     passwordResetCode: {
         type: String,
-        select: false
     },
     passwordResetExpires: {
         type: Date,
-        select: false
     },
     passwordResetVerified: {
         type: Boolean,
-        select: false,
         default: false
     },
     role: {
@@ -64,10 +59,15 @@ userSchema.pre('save', async function () {
 });
 
 
-// Remove __v from responses
+// Remove __v, passwords from responses
 userSchema.set('toJSON', {
     transform: function (doc, ret) {
         delete ret.__v;
+        delete ret.password;  
+        delete ret.passwordChangedAt;
+        delete ret.passwordResetCode;
+        delete ret.passwordResetVerified;
+        delete ret.passwordResetExpires;
         return ret;
     }
 });
@@ -75,10 +75,14 @@ userSchema.set('toJSON', {
 userSchema.set('toObject', {
     transform: function (doc, ret) {
         delete ret.__v;
+        delete ret.password;  
+        delete ret.passwordChangedAt;
+        delete ret.passwordResetCode;
+        delete ret.passwordResetVerified;
+        delete ret.passwordResetExpires;
         return ret;
     }
 });
-
 
 
 let User = mongoose.model('User', userSchema);

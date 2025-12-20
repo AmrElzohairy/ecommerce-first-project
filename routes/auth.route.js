@@ -4,7 +4,8 @@ const {
     signUp,
     login,
     forgotPassword,
-    verifyResetCode
+    verifyResetCode,
+    resetPassword
 } = require('../controllers/auth.controller');
 const { signUpValidator, loginValidator } = require('../utils/validations/authValidations');
 
@@ -21,6 +22,9 @@ router.route('/forgotPassword')
 
 router.route('/verifyResetCode')
     .post(verifyResetCode);
+
+router.route('/resetPassword')
+    .post(resetPassword);
 
 
 module.exports = router;
