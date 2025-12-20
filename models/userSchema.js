@@ -36,6 +36,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         select: false
     },
+    passwordResetExpires: {
+        type: Date,
+        select: false
+    },
+    passwordResetVerified: {
+        type: Boolean,
+        select: false,
+        default: false
+    },
     role: {
         type: String,
         enum: ['user', 'admin', 'manager'],
@@ -48,7 +57,8 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true },);
 
 userSchema.pre('save', async function () {
-
+    // Only hash the password if it has been modified (or is new)
+    if (!this.isModified('password')) return;
     this.password = await bcrypt.hash(this.password, 12);
 
 });

@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const User = require('../models/userSchema');
 const ApiError = require('../utils/apiError');
 const asyncHandler = require('express-async-handler');
@@ -37,4 +38,10 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     if (!user) {
         return next(new ApiError(404, `There is no user with email ${req.body.email}`));
     }
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedResetCode = crypto.createHash('sha256').update(resetCode).digest('hex');
+    user.passwordResetCode = hashedResetCode;
+    user.passwordResetExpires = Date.now() + 1 * 60 * 1000; // 1 minutes
+    user.passwordResetVerified = false;
+    await user.save();
 });
