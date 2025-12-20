@@ -7,15 +7,24 @@ const roles = require('../utils/userRoles');
 
 
 router.route('/')
-    .get(getAllCategories)
+    .get(auth.protect, getAllCategories)
     .post(
         auth.protect,
         auth.allowedTo(roles.ADMIN, roles.Manager),
         createCategoryValidator, createCategory);
 
 router.route('/:id')
-    .get(getCategoryByIdValidator, getCategoryById)
-    .put(updateCategoryValidator, updateCategory)
-    .delete(deleteCategoryValidator, deleteCategory);
+    .get(auth.protect, getCategoryByIdValidator, getCategoryById)
+    .put(
+        auth.protect,
+        auth.allowedTo(roles.ADMIN,
+            roles.Manager),
+        updateCategoryValidator,
+        updateCategory)
+    .delete(
+        auth.protect,
+        auth.allowedTo(roles.ADMIN, roles.Manager),
+        deleteCategoryValidator,
+        deleteCategory);
 
 module.exports = router;
