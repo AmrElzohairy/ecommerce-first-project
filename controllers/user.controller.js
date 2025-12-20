@@ -6,6 +6,7 @@ const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 const ApiError = require('../utils/apiError');
 const bcrypt = require('bcrypt');
+const createToken = require('../utils/createToken');
 
 
 // Upload single image
@@ -83,5 +84,25 @@ exports.getMe = asyncHandler(
     async (req, res, next) => {
         req.params.id = req.user._id;
         next();
+    }
+);
+
+exports.changePasswordMe = asyncHandler(
+    async (req, res, next) => {
+        let user = await User.findByIdAndUpdate(req.user._id,
+            {
+                password: bcrypt.hashSync(req.body.newPassword, 12),
+                passwordChangedAt: Date.now()
+            },
+        );
+        if (!user) {
+            return next(new ApiError(404, 'User not found'));
+        }
+        let token = createToken(user);
+        res.status(200).json({
+            status: 'success',
+            message: 'Password Changed Successfully',
+            token
+        });
     }
 );

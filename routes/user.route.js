@@ -11,7 +11,8 @@ const {
     changePassword,
     uploadUserImage,
     resizeImage,
-    getMe
+    getMe,
+    changePasswordMe
 } = require('../controllers/user.controller');
 const {
     getUserValidator,
@@ -38,7 +39,15 @@ router.route('/me')
         getMe,
         getUserById
     )
-    
+    .put(
+        auth.protect,
+        uploadUserImage,
+        resizeImage,
+        changePasswordMe
+    );
+
+
+
 router.route('/:id')
     .get(getUserValidator, getUserById)
     .put(
