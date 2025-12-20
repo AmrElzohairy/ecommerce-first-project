@@ -3,7 +3,8 @@ const router = express.Router();
 const {
     signUp,
     login,
-    forgotPassword
+    forgotPassword,
+    verifyResetCode
 } = require('../controllers/auth.controller');
 const { signUpValidator, loginValidator } = require('../utils/validations/authValidations');
 
@@ -17,6 +18,9 @@ router.route('/login')
 
 router.route('/forgotPassword')
     .post(forgotPassword);
+
+router.route('/verifyResetCode')
+    .post(verifyResetCode);
 
 
 module.exports = router;

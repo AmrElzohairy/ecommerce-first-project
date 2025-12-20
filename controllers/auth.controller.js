@@ -64,3 +64,17 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
         return next(new ApiError(500, 'There was an error sending the email. Try again later.'));
     }
 });
+
+exports.verifyResetCode = asyncHandler(async (req, res, next) => {
+    const hashedResetCode = crypto.createHash('sha256').update(req.body.resetCode).digest('hex');
+    const user = await User.findOne({
+        passwordResetCode: hashedResetCode,
+        passwordResetExpires: { $gt: Date.now() }
+    });
+    if (!user) {
+        return next(new ApiError(400, 'Reset code is invalid or has expired'));
+    }
+    user.passwordResetVerified = true;
+    await user.save();
+    res.status(200).json({ status: 'success', message: 'Reset code verified!' });
+});
