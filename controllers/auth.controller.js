@@ -23,7 +23,10 @@ exports.login = asyncHandler(async (req, res, next) => {
     }
 
     const token = createToken(user);
-    res.status(200).json({ data: user, token });
+    res.status(200).json({ 
+        status: 'success',
+        message: req.t('auth.loginSuccess'),
+        data: user, token });
 });
 
 exports.protect = asyncHandler(async (req, res, next) => {

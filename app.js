@@ -11,6 +11,8 @@ const userRoute = require('./routes/user.route');
 const product = require('./routes/product.route');
 const authRoute = require('./routes/auth.route');
 const ApiError = require('./utils/apiError');
+const i18next = require('./utils/i18Next');
+const i18nextMiddleware = require('i18next-http-middleware');
 
 
 // Load environment variables from .env file
@@ -26,6 +28,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 if (NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
+app.use(i18nextMiddleware.handle(i18next));
 app.use(express.json());
 
 // Routes

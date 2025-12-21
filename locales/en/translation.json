@@ -1,0 +1,6 @@
+{
+    "auth": {
+        "invalidCredentials": "Invalid email or password",
+        "loginSuccess": "Login successful"
+    }
+}
