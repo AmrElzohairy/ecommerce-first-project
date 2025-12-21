@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 app.use(globalErrorHandler);
 
 // Start the server
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running in ${NODE_ENV} mode on port ${PORT} and http://localhost:${PORT}`);
 });
 
